@@ -11,9 +11,43 @@ import {
   TableHeader,
   TableRow,
 } from "./components/ui/table";
+import { useQuery } from "@tanstack/react-query";
 //import { Pagination } from "./components/pagination";
 
+export interface TagResponse {
+  first: number;
+  prev: number | null;
+  next: number;
+  last: number;
+  pages: number;
+  items: number;
+  data: Tag[];
+}
+
+export interface Tag {
+  title: string;
+  slug: string;
+  amountOfVideos: number;
+  id: string;
+}
+
 export function App() {
+  const { data: tagsResponse, isLoading } = useQuery<TagResponse>({
+    queryKey: ["get-tags"],
+    queryFn: async () => {
+      const response = await fetch(
+        "http://localhost:3333/tags?_page=1&_per_page=10"
+      );
+      const data = await response.json();
+
+      return data;
+    },
+  });
+
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <div className="py-10 space-y-8">
       <div>
@@ -48,19 +82,19 @@ export function App() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.from({ length: 10 }).map((value, index) => {
+            {tagsResponse?.data.map((tag) => {
               return (
-                <TableRow key={index}>
+                <TableRow key={tag.id}>
                   <TableCell></TableCell>
                   <TableCell>
                     <div className="flex flex-col gap-0.5">
-                      <span className="font-medium">React</span>
-                      <span className="text-xs text-zinc-500">
-                        56d4aeef-cccb-4f90-afc4-3357ca6d9dd3
-                      </span>
+                      <span className="font-medium">{tag.title}</span>
+                      <span className="text-xs text-zinc-500">{tag.id}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-zinc-300">13 video(s)</TableCell>
+                  <TableCell className="text-zinc-300">
+                    {tag.amountOfVideos} video(s)
+                  </TableCell>
                   <TableCell className="text-right">
                     <Button size="icon">
                       <MoreHorizontal className="size-4" />
