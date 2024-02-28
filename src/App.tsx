@@ -11,8 +11,9 @@ import {
   TableHeader,
   TableRow,
 } from "./components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-//import { Pagination } from "./components/pagination";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { Pagination } from "./components/pagination";
+import { useSearchParams } from "react-router-dom";
 
 export interface TagResponse {
   first: number;
@@ -32,16 +33,23 @@ export interface Tag {
 }
 
 export function App() {
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const { data: tagsResponse, isLoading } = useQuery<TagResponse>({
-    queryKey: ["get-tags"],
+    queryKey: ["get-tags", page],
     queryFn: async () => {
       const response = await fetch(
-        "http://localhost:3333/tags?_page=1&_per_page=10"
+        `http://localhost:3333/tags?_page=${page}&_per_page=10`
       );
       const data = await response.json();
 
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       return data;
     },
+
+    placeholderData: keepPreviousData,
+    staleTime: 1000 * 60,
   });
 
   if (isLoading) {
@@ -105,7 +113,13 @@ export function App() {
             })}
           </TableBody>
         </Table>
-        {/* <Pagination pages={0} items={0} page={0} /> */}
+        {tagsResponse && (
+          <Pagination
+            pages={tagsResponse.pages}
+            items={tagsResponse.items}
+            page={page}
+          />
+        )}
       </main>
     </div>
   );
