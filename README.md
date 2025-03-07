@@ -16,7 +16,15 @@
 
 [Nivo]() é um projeto desenvolvido durante a semana React na Prática da [Rocketseat](https://www.rocketseat.com.br/) que foca nas tecnologias ReactJS, React Native e NodeJS. Consiste em criar uma aplicação para listar as tags dos vídeos presentes na plataforma, podendo cadstrar novas tags.
 
-## 🧪 Technologies
+## 🌟 Funcionalidades
+
+1. **Listagem de Tags**: Exibe todas as tags associadas aos vídeos da plataforma de forma organizada. 
+2. **Cadastro de Novas Tags**: Permite ao usuário cadastrar novas tags para serem associadas aos vídeos.
+3. **Edição e Remoção**: Funcionalidade para editar ou remover tags existentes.
+4. **Responsividade**: A aplicação é responsiva, proporcionando uma boa experiência em dispositivos móveis e desktop.
+
+
+## 🧪 Tecnologias
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
 
